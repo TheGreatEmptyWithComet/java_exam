@@ -1,4 +1,4 @@
-package edu.itstep.it_university.entity;
+package edu.itstep.it_academy.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;

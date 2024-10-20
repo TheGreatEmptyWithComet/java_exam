@@ -1,4 +1,4 @@
-package edu.itstep.it_university.configuration;
+package edu.itstep.it_academy.configuration;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

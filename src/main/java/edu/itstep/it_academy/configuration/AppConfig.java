@@ -1,4 +1,4 @@
-package edu.itstep.it_university.configuration;
+package edu.itstep.it_academy.configuration;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(basePackages = "edu.itstep.it_university")
+@ComponentScan(basePackages = "edu.itstep.it_academy")
 @EnableWebMvc
 public class AppConfig {
     @Bean
@@ -31,7 +31,7 @@ public class AppConfig {
         ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
         try {
             comboPooledDataSource.setDriverClass("com.mysql.cj.jdbc.Driver");
-            comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/it_step?useUnicode=true&serverTimezone=UTC");
+            comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/it_academy?useUnicode=true&serverTimezone=UTC");
             comboPooledDataSource.setUser("root");
             comboPooledDataSource.setPassword("admin");
         } catch (PropertyVetoException e) {
@@ -44,7 +44,7 @@ public class AppConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
         localSessionFactoryBean.setDataSource(dataSource());
-        localSessionFactoryBean.setPackagesToScan("edu.itstep.it_university.entity");
+        localSessionFactoryBean.setPackagesToScan("edu.itstep.it_academy.entity");
 
         Properties properties = new Properties();
         properties.setProperty("hibernate.show_sql", "true");

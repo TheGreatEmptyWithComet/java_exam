@@ -1,6 +1,6 @@
-create database it_university;
+create database it_academy;
 
-use it_university;
+use it_academy;
 
 create table students
 (
@@ -33,4 +33,5 @@ create table grades
     foreign key (student_id) references students (id),
     foreign key (subject_id) references subjects (id)
 );
+
 
