@@ -3,12 +3,12 @@ package edu.itstep.it_academy.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "grades")
+@Table(name = "subjects")
 public class Subject {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column
     private String name;
@@ -24,11 +24,11 @@ public class Subject {
 
 
     // Getters and Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -38,5 +38,10 @@ public class Subject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

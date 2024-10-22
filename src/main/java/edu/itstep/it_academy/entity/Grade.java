@@ -90,4 +90,16 @@ public class Grade {
     public void setStudent(Student student) {
         this.student = student;
     }
+
+    @Override
+    public String toString() {
+        return "Grade{" +
+                "id=" + id +
+                ", grade=" + grade +
+                ", comment='" + comment + '\'' +
+                ", date=" + date +
+                ", subject=" + subject +
+                ", student=" + student +
+                '}';
+    }
 }
