@@ -34,6 +34,8 @@ create table grades
     foreign key (subject_id) references subjects (id)
 );
 
+ALTER TABLE grades
+    MODIFY comment TEXT NULL;
 
 insert into students (first_name, last_name)
 values

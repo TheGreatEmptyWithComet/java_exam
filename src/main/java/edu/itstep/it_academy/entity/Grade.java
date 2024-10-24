@@ -2,6 +2,8 @@ package edu.itstep.it_academy.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "grades")
@@ -27,6 +29,9 @@ public class Grade {
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "student_id")
     private Student student;
+
+    @Transient
+    private List<LocalDate> scheduleDates = new ArrayList<>();
 
 
     // Constructors
@@ -89,6 +94,14 @@ public class Grade {
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public List<LocalDate> getScheduleDates() {
+        return scheduleDates;
+    }
+
+    public void setScheduleDates(List<LocalDate> scheduleDates) {
+        this.scheduleDates = scheduleDates;
     }
 
     @Override
