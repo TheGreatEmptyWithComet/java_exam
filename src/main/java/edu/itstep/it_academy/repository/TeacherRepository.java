@@ -11,4 +11,8 @@ public interface TeacherRepository {
     public List<Subject> getSubjects();
 
     public List<Grade> getStudentsGrades(Subject subject);
+
+    public List<Student> getStudentsBySubjectId(long subjectId);
+    public List<Student> getStudentsByDefaultSubject();
+    public Subject getSubjectById(long id);
 }

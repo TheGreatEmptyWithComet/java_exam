@@ -112,7 +112,6 @@ public class Grade {
                 ", comment='" + comment + '\'' +
                 ", date=" + date +
                 ", subject=" + subject +
-                ", student=" + student +
                 '}';
     }
 }

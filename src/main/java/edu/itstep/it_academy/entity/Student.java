@@ -68,4 +68,15 @@ public class Student {
     public void setGrades(List<Grade> grades) {
         this.grades = grades;
     }
+
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", grades=" + grades +
+                '}';
+    }
 }

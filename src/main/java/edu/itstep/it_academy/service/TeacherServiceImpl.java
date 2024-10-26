@@ -1,6 +1,7 @@
 package edu.itstep.it_academy.service;
 
 import edu.itstep.it_academy.entity.Grade;
+import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DataServiceImpl implements DataService {
+public class TeacherServiceImpl implements TeacherService {
+
+    @Autowired
+    private TeacherRepository teacherRepository;
 
     @Override
     public List<LocalDate> getScheduleDates(List<Grade> grades) {
