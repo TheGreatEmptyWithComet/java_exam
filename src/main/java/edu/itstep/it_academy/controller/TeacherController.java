@@ -4,7 +4,6 @@ import edu.itstep.it_academy.dto.SubjectFormDTO;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.repository.TeacherRepository;
-import edu.itstep.it_academy.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
