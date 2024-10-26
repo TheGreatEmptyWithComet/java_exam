@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public interface GradeService {
+public class GradeService {
 
-
+    public int test() {
+        return 3;
+    }
 }

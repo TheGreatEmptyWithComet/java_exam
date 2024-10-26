@@ -4,6 +4,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -19,6 +20,7 @@ import java.util.Properties;
 @ComponentScan(basePackages = "edu.itstep.it_academy")
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "edu.itstep.it_academy.repository")
 public class AppConfig {
     @Bean
     public ViewResolver viewResolver() {
