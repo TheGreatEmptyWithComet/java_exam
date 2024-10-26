@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grade</title>
+</head>
+<body>
+<h2>Fill Grade</h2>
+
+<form th:action="@{/saveGrade}" method="post" th:object="${gradeDTO}">
+    <div>
+        <label for="studentId">Select Student:</label>
+        <select id="studentId" th:field="*{studentId}">
+            <option th:each="student : ${gradeDTO.students}"
+                    th:value="${student.id}"
+                    th:text="${student.firstName} + ' ' + ${student.lastName}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label for="subjectId">Select Subject:</label>
+        <select id="subjectId" th:field="*{subjectId}">
+            <option th:each="subject : ${gradeDTO.subjects}"
+                    th:value="${subject.id}"
+                    th:text="${subject.name}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label for="date">Date:</label>
+        <input type="date" id="date" th:field="*{grade.date}"
+               th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}"/>
+    </div>
+
+    <div>
+        <label for="grade">Grade:</label>
+        <input type="number" id="grade" th:field="*{grade.grade}" min="1" max="100"/>
+    </div>
+
+    <div>
+        <label for="comment">Comment:</label>
+        <input type="text" id="comment" th:field="*{grade.comment}"/>
+    </div>
+
+    <input type="submit" value="Save Grade"/>
+</form>
+
+</body>
+</html>
+</body>
+</html>

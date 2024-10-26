@@ -1,6 +1,6 @@
 package edu.itstep.it_academy.service;
 
-import edu.itstep.it_academy.dto.StudentsOutDTO;
+import edu.itstep.it_academy.dto.StudentDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
@@ -21,16 +21,17 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public StudentsOutDTO getStudentsByDefaultSubject() {
+    public StudentDTO getStudentsByDefaultSubject() {
         Subject defaultSubject = subjectRepository.findAll().get(0);
         return getStudentsBySubject(defaultSubject);
     }
 
-    public StudentsOutDTO getStudentsBySubject(Subject subject) {
-        StudentsOutDTO studentsOutDTO = new StudentsOutDTO();
+    public StudentDTO getStudentsBySubject(Subject subject) {
+        StudentDTO studentDTO = new StudentDTO();
 
         List<Student> students = studentRepository
-                .findAllBySubject(subject)
+                //.findAllBySubject(subject)
+                .findAll()
                 .stream()
                 .map(student -> {
                     List<Grade> subjectGrades = student.getGrades().stream()
@@ -41,17 +42,17 @@ public class StudentService {
                 })
                 .toList();
 
-        studentsOutDTO.setStudents(students);
+        studentDTO.setStudents(students);
 
-        studentsOutDTO.setSubjectId(subject.getId());
+        studentDTO.setSubjectId(subject.getId());
 
         List<Subject> subjects = subjectRepository.findAll();
-        studentsOutDTO.setSubjects(subjects);
+        studentDTO.setSubjects(subjects);
 
-        return studentsOutDTO;
+        return studentDTO;
     }
 
-    public StudentsOutDTO getStudentsBySubjectId(long id) {
+    public StudentDTO getStudentsBySubjectId(long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
         // TODO Change exception
         if (subject == null) {
