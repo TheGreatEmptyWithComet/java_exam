@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+</head>
+<body>
+<h1>Students grades</h1>
+<form th:action="@{/getStudentsGrades}" method="post" th:object="${studentsOutDTO}">
+    <select th:field="*{subjectId}">
+        <option th:each="subject : ${studentsOutDTO.subjects}"
+                th:value="${subject.id}"
+                th:text="${subject.name}"></option>
+    </select>
+    <input type="submit" value="Select Subject">
+</form>
+
+<h4>Students</h4>
+<div th:each="student : ${studentsOutDTO.students}">
+    <h3>Student: <span th:text="${student.firstName}"></span> <span th:text="${student.lastName}"></span></h3>
+    <ul>
+        <li th:each="grade : ${student.grades}">
+            <span th:text="${grade.date}"></span> <span th:text="${grade.grade}"></span> <span
+                th:text="${grade.comment}"></span>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

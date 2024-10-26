@@ -1,14 +1,19 @@
 package edu.itstep.it_academy.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name ="teachers")
 public class Teacher {
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -20,35 +25,6 @@ public class Teacher {
     // Constructors
     public Teacher(String firstName, String lastName) {
         this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public Teacher() {
-    }
-
-
-    // Getters and Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 }

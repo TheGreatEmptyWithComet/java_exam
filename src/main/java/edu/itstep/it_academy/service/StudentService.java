@@ -4,7 +4,6 @@ import edu.itstep.it_academy.dto.StudentsOutDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
-import edu.itstep.it_academy.repository.GradeRepository;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +21,18 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public StudentsOutDTO getStudentsByDefaultSubject(){
+    public StudentsOutDTO getStudentsByDefaultSubject() {
         Subject defaultSubject = subjectRepository.findAll().get(0);
         return getStudentsBySubject(defaultSubject);
     }
 
-    public StudentsOutDTO getStudentsBySubject(Subject subject){
+    public StudentsOutDTO getStudentsBySubject(Subject subject) {
         StudentsOutDTO studentsOutDTO = new StudentsOutDTO();
 
         List<Student> students = studentRepository
                 .findAllBySubject(subject)
                 .stream()
-                .map(student->{
+                .map(student -> {
                     List<Grade> subjectGrades = student.getGrades().stream()
                             .filter(grade -> grade.getSubject().equals(subject)) // Оставляем только оценки по нужному предмету
                             .collect(Collectors.toList());
@@ -44,23 +43,21 @@ public class StudentService {
 
         studentsOutDTO.setStudents(students);
 
+        studentsOutDTO.setSubjectId(subject.getId());
+
         List<Subject> subjects = subjectRepository.findAll();
         studentsOutDTO.setSubjects(subjects);
 
         return studentsOutDTO;
     }
 
+    public StudentsOutDTO getStudentsBySubjectId(long id) {
+        Subject subject = subjectRepository.findById(id).orElse(null);
+        // TODO Change exception
+        if (subject == null) {
+            throw new RuntimeException("Subject with id " + id + " not fund");
+        }
 
-    String hql = "SELECT s FROM Student s JOIN s.grades g where g.subject.id = :id";
-//        List<Student> students = sessionFactory
-//                .getCurrentSession()
-//                .createQuery(hql, Student.class)
-//                .setParameter("id", subjectId)
-//                .list();
-//
-//        for (Student student : students) {
-//            List<Grade> selectedGrades = student.getGrades().stream().filter(g->g.getSubject().getId()==subjectId).collect(Collectors.toList());
-//            student.setGrades(selectedGrades);
-//        }
-
+        return getStudentsBySubject(subject);
+    }
 }

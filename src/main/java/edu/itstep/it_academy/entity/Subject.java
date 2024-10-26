@@ -1,16 +1,20 @@
 package edu.itstep.it_academy.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "subjects")
 public class Subject {
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     private String name;
 
 
@@ -19,26 +23,6 @@ public class Subject {
         this.name = name;
     }
 
-    public Subject() {
-    }
-
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

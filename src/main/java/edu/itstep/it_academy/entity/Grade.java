@@ -1,25 +1,24 @@
 package edu.itstep.it_academy.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "grades")
 public class Grade {
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     private int grade;
-
-    @Column
     private String comment;
-
-    @Column
     private LocalDate date;
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
@@ -29,9 +28,6 @@ public class Grade {
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "student_id")
     private Student student;
-
-    @Transient
-    private List<LocalDate> scheduleDates = new ArrayList<>();
 
 
     // Constructors
@@ -43,66 +39,6 @@ public class Grade {
         this.grade = grade;
     }
 
-    public Grade() {
-    }
-
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public int getGrade() {
-        return grade;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public List<LocalDate> getScheduleDates() {
-        return scheduleDates;
-    }
-
-    public void setScheduleDates(List<LocalDate> scheduleDates) {
-        this.scheduleDates = scheduleDates;
-    }
 
     @Override
     public String toString() {
