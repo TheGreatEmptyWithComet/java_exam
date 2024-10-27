@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -19,6 +20,7 @@ public class Grade {
 
     private int grade;
     private String comment;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
@@ -30,7 +32,7 @@ public class Grade {
     private Student student;
 
 
-    // Constructors
+    // Custom constructors
     public Grade(Student student, Subject subject, LocalDate date, String comment, int grade) {
         this.student = student;
         this.subject = subject;

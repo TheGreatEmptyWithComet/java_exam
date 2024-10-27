@@ -15,9 +15,10 @@
     <input type="submit" value="Select Subject">
 </form>
 
-<h4>Students</h4>
 <div th:each="student : ${studentDTO.students}">
-    <h3>Student: <span th:text="${student.firstName}"></span> <span th:text="${student.lastName}"></span>
+    <h3><span th:text="${student.firstName}"></span> <span th:text="${student.lastName}"></span>
+        <!--        <input type="button" value="Add grade"-->
+        <!--               th:onclick="|window.location.href='/createGrade?contactId=${contact.id}'|"/>-->
         <form th:action="@{/createGrade}" method="post" style="display:inline;">
             <input type="hidden" name="studentId" th:value="${student.id}"/>
             <input type="hidden" name="subjectId" th:value="${studentDTO.subjectId}"/>
@@ -26,8 +27,13 @@
     </h3>
     <ul>
         <li th:each="grade : ${student.grades}">
-            <span th:text="${grade.date}"></span> <span th:text="${grade.grade}"></span> <span
-                th:text="${grade.comment}"></span>
+            <span th:text="${grade.date}"></span>
+            <span th:text="${grade.grade}"></span>
+            <span th:text="${grade.comment}"></span>
+            <span> <input type="button" value="Update grade"
+                          th:onclick="|window.location.href='/updateGrade?gradeId=${grade.id}'|"/></span>
+            <span> <input type="button" value="Delete grade"
+                          th:onclick="|window.location.href='/deleteGrade?gradeId=${grade.id}'|"/></span>
         </li>
     </ul>
 </div>

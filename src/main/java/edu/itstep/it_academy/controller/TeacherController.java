@@ -2,6 +2,8 @@ package edu.itstep.it_academy.controller;
 
 import edu.itstep.it_academy.dto.GradeDTO;
 import edu.itstep.it_academy.dto.StudentDTO;
+import edu.itstep.it_academy.entity.Grade;
+import edu.itstep.it_academy.repository.GradeRepository;
 import edu.itstep.it_academy.service.GradeService;
 import edu.itstep.it_academy.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class TeacherController {
     private StudentService studentService;
     @Autowired
     private GradeService gradeService;
+    @Autowired
+    private GradeRepository gradeRepository;
 
     @GetMapping("/")
     public String getStudentsGrades(Model model) {
@@ -42,7 +46,7 @@ public class TeacherController {
 
     @PostMapping("/createGrade")
     public String createGrade(@ModelAttribute("gradeDTO") GradeDTO gradeDTO, Model model) {
-        gradeDTO = gradeService.getGradeDTO(gradeDTO);
+        gradeDTO = gradeService.fillGradeDTO(gradeDTO);
         model.addAttribute("gradeDTO", gradeDTO);
         return "grade-form";
     }
@@ -51,5 +55,13 @@ public class TeacherController {
     public String saveGrade(@ModelAttribute("gradeDTO") GradeDTO gradeDTO, Model model) {
         gradeService.saveGrade(gradeDTO);
         return "redirect:/getStudentsGrades?subjectId=" + gradeDTO.getSubjectId();
+    }
+
+    @GetMapping("/updateGrade")
+    public String updateGrade(@RequestParam("gradeId") long gradeId, Model model) {
+        GradeDTO gradeDTO = gradeService.getGradeDTOByGradeId(gradeId);
+        model.addAttribute("gradeDTO", gradeDTO);
+        System.out.println(gradeDTO);
+        return "grade-form";
     }
 }
