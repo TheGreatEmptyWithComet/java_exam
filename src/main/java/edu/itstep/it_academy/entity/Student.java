@@ -24,6 +24,12 @@ public class Student {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "user_name")
+    private String username;
+
+    private String password;
+    private String role = "ROLE_STUDENT";  // Role prefix "ROLE_" required by Spring Security
+
     @OneToMany(
             cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},
             mappedBy = "student",

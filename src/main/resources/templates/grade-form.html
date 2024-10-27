@@ -7,7 +7,7 @@
 <body>
 <h2>Fill Grade</h2>
 
-<form th:action="@{/saveGrade}" method="post" th:object="${gradeDTO}">
+<form th:action="@{/teacher/saveGrade}" method="post" th:object="${gradeDTO}">
 
     <input type="hidden" id="id" th:field="*{grade.id}"/>
 
@@ -33,7 +33,6 @@
         <label for="date">Date:</label>
         <input type="date" id="date" th:field="*{grade.date}"
                th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}"/>
-<!--        <input type="date" id="date" th:field="*{grade.date}"/>-->
     </div>
 
     <div>

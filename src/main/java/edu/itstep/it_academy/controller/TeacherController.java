@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
+@RequestMapping("/teacher")
 public class TeacherController {
 
     @Autowired
@@ -23,21 +24,21 @@ public class TeacherController {
     public String getStudentsGrades(Model model) {
         StudentDTO studentDTO = studentService.getStudentsByDefaultSubject();
         model.addAttribute("studentDTO", studentDTO);
-        return "students-grades";
+        return "teacher-students";
     }
 
     @GetMapping("/getStudentsGrades")
     public String getStudentsGrades(@RequestParam("subjectId") Long subjectId, Model model) {
         StudentDTO studentDTO = studentService.getStudentsBySubjectId(subjectId);
         model.addAttribute("studentDTO", studentDTO);
-        return "students-grades";
+        return "teacher-students";
     }
 
     @PostMapping("/getStudentsGrades")
     public String getStudentsGrades(@ModelAttribute("studentDTO") StudentDTO studentDTO, Model model) {
         studentDTO = studentService.getStudentsBySubjectId(studentDTO.getSubjectId());
         model.addAttribute("studentDTO", studentDTO);
-        return "students-grades";
+        return "teacher-students";
     }
 
     @PostMapping("/createGrade")
@@ -50,7 +51,7 @@ public class TeacherController {
     @PostMapping("/saveGrade")
     public String saveGrade(@ModelAttribute("gradeDTO") GradeDTO gradeDTO) {
         gradeService.saveGrade(gradeDTO);
-        return "redirect:/getStudentsGrades?subjectId=" + gradeDTO.getSubjectId();
+        return "redirect:/teacher/getStudentsGrades?subjectId=" + gradeDTO.getSubjectId();
     }
 
     @GetMapping("/updateGrade")
@@ -64,6 +65,6 @@ public class TeacherController {
     public String deleteGrade(@RequestParam("gradeId") long gradeId) {
         Grade grade = gradeService.getGradeById(gradeId);
         gradeService.deleteGradeById(gradeId);
-        return "redirect:/getStudentsGrades?subjectId=" + grade.getSubject().getId();
+        return "redirect:/teacher/getStudentsGrades?subjectId=" + grade.getSubject().getId();
     }
 }
