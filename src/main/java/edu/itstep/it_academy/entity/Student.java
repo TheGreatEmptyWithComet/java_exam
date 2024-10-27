@@ -25,9 +25,10 @@ public class Student {
     private String lastName;
 
     @OneToMany(
-            cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE},
+            cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},
             mappedBy = "student",
-            fetch = FetchType.EAGER
+            fetch = FetchType.EAGER,
+            orphanRemoval = true //укажет Hibernate удалять Grade, если связь Student больше не содержит эту запись.
     )
     private List<Grade> grades = new ArrayList<>();
 

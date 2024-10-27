@@ -7,6 +7,7 @@ import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,8 +34,8 @@ public class GradeService {
 
     public void saveGrade(GradeDTO gradeDTO) {
         Grade gradeFromForm = gradeDTO.getGrade();
-        gradeFromForm.setStudent(studentRepository.findById(gradeDTO.getStudentId()).get());
-        gradeFromForm.setSubject(subjectRepository.findById(gradeDTO.getSubjectId()).get());
+        gradeFromForm.setStudent(studentRepository.findById(gradeDTO.getStudentId()).orElse(null));
+        gradeFromForm.setSubject(subjectRepository.findById(gradeDTO.getSubjectId()).orElse(null));
 
         if (gradeFromForm.getId() == null) {
             gradeRepository.save(gradeFromForm);
@@ -61,5 +62,13 @@ public class GradeService {
         gradeDTO.setSubjectId(grade.getSubject().getId());
         gradeDTO = fillGradeDTO(gradeDTO);
         return gradeDTO;
+    }
+
+    @Transactional
+    public void deleteGradeById(long id){
+        Grade grade = getGradeById(id);
+        grade.getStudent().getGrades().remove(grade);
+        gradeRepository.deleteById(id);
+        System.out.println("Service delete");
     }
 }
