@@ -1,7 +1,10 @@
 package edu.itstep.it_academy.service;
 
 import edu.itstep.it_academy.dto.GradeDTO;
+import edu.itstep.it_academy.dto.StudentGradesDTO;
 import edu.itstep.it_academy.entity.Grade;
+import edu.itstep.it_academy.entity.Student;
+import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.repository.GradeRepository;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
@@ -10,9 +13,15 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 public class GradeService {
 
+    private final SubjectService subjectService;
+    private final CustomUserDetailsService customUserDetailsService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -20,10 +29,12 @@ public class GradeService {
     private final SubjectRepository subjectRepository;
     private final GradeRepository gradeRepository;
 
-    public GradeService(StudentRepository studentRepository, SubjectRepository subjectRepository, GradeRepository gradeRepository) {
+    public GradeService(StudentRepository studentRepository, SubjectRepository subjectRepository, GradeRepository gradeRepository, SubjectService subjectService, CustomUserDetailsService customUserDetailsService) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.gradeRepository = gradeRepository;
+        this.subjectService = subjectService;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     public GradeDTO fillGradeDTO(GradeDTO gradeDTO) {
@@ -70,5 +81,45 @@ public class GradeService {
         grade.getStudent().getGrades().remove(grade);
         gradeRepository.deleteById(id);
         System.out.println("Service delete");
+    }
+
+    public StudentGradesDTO getCurrentStudentGrades(){
+
+        String studentUsername = customUserDetailsService.getCurrentUserUsername();
+        Student student = studentRepository.findByUsername(studentUsername).get();
+        List<Grade> studentGrades = gradeRepository.findGradesByStudentOrderByDate(student);
+        Map<String,List<Grade>> studentGradesGrouped = studentGrades.stream()
+                .collect(Collectors.groupingBy(grade -> grade.getSubject().getName()));
+
+        //List<Subject> subjects = subjectService.getDistinctSubjectsFromGrades(studentGrades);
+        List<Subject> subjects = subjectRepository.findAll();
+
+        StudentGradesDTO studentGradesDTO = new StudentGradesDTO();
+        studentGradesDTO.setGrades(studentGradesGrouped);
+        studentGradesDTO.setSubjects(subjects);
+        studentGradesDTO.setStudent(student);
+
+        return studentGradesDTO;
+    }
+
+    public StudentGradesDTO getCurrentStudentGradesBySubjectId(long subjectId){
+
+        String studentUsername = customUserDetailsService.getCurrentUserUsername();
+        Student student = studentRepository.findByUsername(studentUsername).get();
+        Subject subject = subjectRepository.findById(subjectId).get();
+
+        List<Grade> studentGrades = gradeRepository.findGradesByStudentAndSubjectOrderByDate(student,subject);
+        Map<String,List<Grade>> studentGradesGrouped = studentGrades.stream()
+                .collect(Collectors.groupingBy(grade -> grade.getSubject().getName()));
+
+        List<Subject> subjects = subjectRepository.findAll();
+
+        StudentGradesDTO studentGradesDTO = new StudentGradesDTO();
+        studentGradesDTO.setGrades(studentGradesGrouped);
+        studentGradesDTO.setSubjects(subjects);
+        studentGradesDTO.setSubjectId(subjectId);
+        studentGradesDTO.setStudent(student);
+
+        return studentGradesDTO;
     }
 }

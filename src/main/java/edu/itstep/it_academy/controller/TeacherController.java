@@ -1,7 +1,7 @@
 package edu.itstep.it_academy.controller;
 
 import edu.itstep.it_academy.dto.GradeDTO;
-import edu.itstep.it_academy.dto.StudentDTO;
+import edu.itstep.it_academy.dto.StudentTeacherDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.service.GradeService;
 import edu.itstep.it_academy.service.StudentService;
@@ -22,22 +22,22 @@ public class TeacherController {
 
     @GetMapping("/")
     public String getStudentsGrades(Model model) {
-        StudentDTO studentDTO = studentService.getStudentsByDefaultSubject();
-        model.addAttribute("studentDTO", studentDTO);
+        StudentTeacherDTO studentTeacherDTO = studentService.getStudentsByDefaultSubject();
+        model.addAttribute("studentTeacherDTO", studentTeacherDTO);
         return "teacher-students";
     }
 
     @GetMapping("/getStudentsGrades")
     public String getStudentsGrades(@RequestParam("subjectId") Long subjectId, Model model) {
-        StudentDTO studentDTO = studentService.getStudentsBySubjectId(subjectId);
-        model.addAttribute("studentDTO", studentDTO);
+        StudentTeacherDTO studentTeacherDTO = studentService.getStudentsBySubjectId(subjectId);
+        model.addAttribute("studentTeacherDTO", studentTeacherDTO);
         return "teacher-students";
     }
 
     @PostMapping("/getStudentsGrades")
-    public String getStudentsGrades(@ModelAttribute("studentDTO") StudentDTO studentDTO, Model model) {
-        studentDTO = studentService.getStudentsBySubjectId(studentDTO.getSubjectId());
-        model.addAttribute("studentDTO", studentDTO);
+    public String getStudentsGrades(@ModelAttribute("studentDTO") StudentTeacherDTO studentTeacherDTO, Model model) {
+        studentTeacherDTO = studentService.getStudentsBySubjectId(studentTeacherDTO.getSubjectId());
+        model.addAttribute("studentTeacherDTO", studentTeacherDTO);
         return "teacher-students";
     }
 

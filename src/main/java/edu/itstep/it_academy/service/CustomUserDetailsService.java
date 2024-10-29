@@ -5,6 +5,9 @@ import edu.itstep.it_academy.entity.Teacher;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,16 +16,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
+    //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
     @Autowired
     private TeacherRepository teacherRepository;
 
     @Autowired
     private StudentRepository studentRepository;
+
+//    public CustomUserDetailsService() {
+//        this.authentication = authentication;
+//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -46,72 +56,21 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         throw new UsernameNotFoundException("User not found");
     }
+
+    public String getCurrentUserUsername(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
+    }
+
+    public boolean currentUserIsTeacher(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
+        return roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_TEACHER"));
+    }
+
+    public boolean currentUserIsStudent(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
+        return roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_STUDENT"));
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//package edu.itstep.it_academy.service;
-//
-//import edu.itstep.it_academy.entity.Student;
-//import edu.itstep.it_academy.entity.Teacher;
-//import edu.itstep.it_academy.repository.StudentRepository;
-//import edu.itstep.it_academy.repository.TeacherRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.authority.AuthorityUtils;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.Collections;
-//import java.util.Optional;
-//
-////@Service
-////public class UserDetailsServiceImpl implements UserDetailsService {
-////
-////    @Autowired
-////    private TeacherRepository teacherRepository;
-////
-////    @Autowired
-////    private StudentRepository studentRepository;
-////
-////    @Override
-////    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-////        Teacher teacher = teacherRepository.findByUsername(username);
-////        if (teacher != null) {
-////            return new org.springframework.security.core.userdetails.User(
-////                    teacher.getUsername(),
-////                    teacher.getPassword(),
-////                    Collections.singletonList(new SimpleGrantedAuthority(teacher.getRole()))
-////            );
-////        }
-////
-////        Student student = studentRepository.findByUsername(username);
-////        if (student != null) {
-////            return new org.springframework.security.core.userdetails.User(
-////                    student.getUsername(),
-////                    student.getPassword(),
-////                    Collections.singletonList(new SimpleGrantedAuthority(student.getRole()))
-////            );
-////        }
-////
-////        throw new UsernameNotFoundException("User not found with username: " + username);
-////    }
-////}

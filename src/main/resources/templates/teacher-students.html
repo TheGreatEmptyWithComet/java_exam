@@ -6,20 +6,20 @@
 </head>
 <body>
 <h1>Students grades</h1>
-<form th:action="@{/teacher/getStudentsGrades}" method="post" th:object="${studentDTO}">
+<form th:action="@{/teacher/getStudentsGrades}" method="post" th:object="${studentTeacherDTO}">
     <select th:field="*{subjectId}">
-        <option th:each="subject : ${studentDTO.subjects}"
+        <option th:each="subject : ${studentTeacherDTO.subjects}"
                 th:value="${subject.id}"
                 th:text="${subject.name}"></option>
     </select>
     <input type="submit" value="Select Subject">
 </form>
 
-<div th:each="student : ${studentDTO.students}">
+<div th:each="student : ${studentTeacherDTO.students}">
     <h3><span th:text="${student.firstName}"></span> <span th:text="${student.lastName}"></span>
         <form th:action="@{/teacher/createGrade}" method="post" style="display:inline;">
             <input type="hidden" name="studentId" th:value="${student.id}"/>
-            <input type="hidden" name="subjectId" th:value="${studentDTO.subjectId}"/>
+            <input type="hidden" name="subjectId" th:value="${studentTeacherDTO.subjectId}"/>
             <button type="submit">Add grade</button>
         </form>
     </h3>

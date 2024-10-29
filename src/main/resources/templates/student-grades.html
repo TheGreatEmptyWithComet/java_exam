@@ -5,6 +5,29 @@
     <title>Student</title>
 </head>
 <body>
-<h1>Student grades</h1>
+<h1 th:text="'Student '+${studentGradesDTO.student.firstName}+' '+ ${studentGradesDTO.student.lastName}+' grades'"></h1>
+<form th:action="@{/student/getStudentGradesBySubject}" method="post" th:object="${studentGradesDTO}">
+    <select th:field="*{subjectId}">
+        <option th:each="subject : ${studentGradesDTO.subjects}"
+                th:value="${subject.id}"
+                th:text="${subject.name}"></option>
+    </select>
+    <input type="submit" value="Select Subject">
+</form>
+
+<span> <input type="button" value="Show all"
+              th:onclick="|window.location.href='/student/'|"/></span>
+
+
+<div th:each="entry : ${studentGradesDTO.grades}">
+    <h3 th:text="${entry.key}"></h3>
+    <ul>
+        <li th:each="grade : ${entry.value}">
+            <span th:text="${grade.date}"></span>
+            <span th:text="${grade.grade}"></span>
+            <span th:text="${grade.comment}"></span>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

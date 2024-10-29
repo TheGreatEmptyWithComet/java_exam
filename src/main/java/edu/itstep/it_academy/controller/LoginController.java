@@ -1,5 +1,7 @@
 package edu.itstep.it_academy.controller;
 
+import edu.itstep.it_academy.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,20 +13,17 @@ import java.util.Collection;
 @Controller
 public class LoginController {
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
     @GetMapping("/")
-    public String yourMethod() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public String home() {
 
-        // Get the roles (authorities) of the current user
-        Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
-
-        boolean isTeacher = roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_TEACHER"));
-        if (isTeacher) {
+        if (customUserDetailsService.currentUserIsTeacher()) {
             return "redirect:/teacher/";
         }
 
-        boolean isStudent = roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_STUDENT"));
-        if (isStudent) {
+        if (customUserDetailsService.currentUserIsStudent()) {
             return "redirect:/student/";
         }
 
