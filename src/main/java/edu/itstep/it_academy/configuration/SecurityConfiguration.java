@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/teacher/**").hasRole("TEACHER")
                 .requestMatchers("/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
-        ).httpBasic(Customizer.withDefaults());
+        ).formLogin(Customizer.withDefaults());
 
         return httpSecurity.build();
     }
