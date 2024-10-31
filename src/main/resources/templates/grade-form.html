@@ -32,12 +32,13 @@
     <div>
         <label for="date">Date:</label>
         <input type="date" id="date" th:field="*{grade.date}"
-               th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}"/>
+               th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}" required/>
     </div>
 
     <div>
         <label for="grade">Grade:</label>
-        <input type="number" id="grade" th:field="*{grade.grade}" min="1" max="100"/>
+        <input type="number" id="grade" th:field="*{grade.grade}"/>
+        <div th:if="${#fields.hasErrors('grade.grade')}" th:errors="*{grade.grade}">Grade Error</div>
     </div>
 
     <div>

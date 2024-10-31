@@ -1,6 +1,5 @@
 package edu.itstep.it_academy.dto;
 
-
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import lombok.AllArgsConstructor;
@@ -14,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentTeacherDTO {
     private long subjectId;
-    private List<Student> students;
-    private List<Subject> subjects;
+    private List<Student> students; // TODO add DTO
+    private List<Subject> subjects; // TODO add DTO
 }

@@ -5,9 +5,11 @@ import edu.itstep.it_academy.dto.StudentTeacherDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.service.GradeService;
 import edu.itstep.it_academy.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -49,7 +51,13 @@ public class TeacherController {
     }
 
     @PostMapping("/saveGrade")
-    public String saveGrade(@ModelAttribute("gradeDTO") GradeDTO gradeDTO) {
+    public String saveGrade(@Valid @ModelAttribute("gradeDTO") GradeDTO gradeDTO, BindingResult result,Model model) {
+        System.out.println(gradeDTO);
+        if (result.hasErrors()) {
+            System.out.println(gradeDTO);
+            model.addAttribute("gradeDTO", gradeDTO);
+            return "grade-form";
+        }
         gradeService.saveGrade(gradeDTO);
         return "redirect:/teacher/getStudentsGrades?subjectId=" + gradeDTO.getSubjectId();
     }

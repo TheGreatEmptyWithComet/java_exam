@@ -1,6 +1,8 @@
 package edu.itstep.it_academy.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,8 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Min(value = 1, message = "Grade must be 1 or bigger")
+    @Max(value = 100, message = "Grade must be 100 or less")
     private int grade;
     private String comment;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
