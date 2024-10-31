@@ -7,4 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface GradeMapper {
     GradeDTO toDTO(Grade grade);
+    Grade toEntity(GradeDTO gradeDTO);
 }

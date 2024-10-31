@@ -9,7 +9,7 @@
 
 <form th:action="@{/teacher/saveGrade}" method="post" th:object="${gradeDTO}">
 
-    <input type="hidden" id="id" th:field="*{grade.id}"/>
+    <input type="hidden" id="id" th:field="*{id}"/>
 
     <div>
         <label for="studentId">Select Student:</label>
@@ -29,21 +29,23 @@
         </select>
     </div>
 
+
     <div>
         <label for="date">Date:</label>
-        <input type="date" id="date" th:field="*{grade.date}"
-               th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}" required/>
+        <input type="date" id="date" th:field="*{date}"
+               th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}"/>
+        <div th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Grade Error</div>
     </div>
 
     <div>
         <label for="grade">Grade:</label>
-        <input type="number" id="grade" th:field="*{grade.grade}"/>
-        <div th:if="${#fields.hasErrors('grade.grade')}" th:errors="*{grade.grade}">Grade Error</div>
+        <input type="number" id="grade" th:field="*{grade}"/>
+        <div th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}">Grade Error</div>
     </div>
 
     <div>
         <label for="comment">Comment:</label>
-        <input type="text" id="comment" th:field="*{grade.comment}"/>
+        <input type="text" id="comment" th:field="*{comment}"/>
     </div>
 
     <input type="submit" value="Save Grade"/>

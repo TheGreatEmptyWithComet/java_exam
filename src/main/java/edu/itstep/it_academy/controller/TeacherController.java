@@ -45,7 +45,7 @@ public class TeacherController {
 
     @PostMapping("/createGrade")
     public String createGrade(@ModelAttribute("gradeDTO") GradeDTO gradeDTO, Model model) {
-        gradeDTO = gradeService.fillGradeDTO(gradeDTO);
+        gradeDTO = gradeService.fillGradeDTOWithAdditionalData(gradeDTO);
         model.addAttribute("gradeDTO", gradeDTO);
         return "grade-form";
     }
@@ -54,6 +54,7 @@ public class TeacherController {
     public String saveGrade(@Valid @ModelAttribute("gradeDTO") GradeDTO gradeDTO, BindingResult result,Model model) {
         System.out.println(gradeDTO);
         if (result.hasErrors()) {
+            gradeDTO = gradeService.fillGradeDTOWithAdditionalData(gradeDTO);
             System.out.println(gradeDTO);
             model.addAttribute("gradeDTO", gradeDTO);
             return "grade-form";
@@ -65,6 +66,7 @@ public class TeacherController {
     @GetMapping("/updateGrade")
     public String updateGrade(@RequestParam("gradeId") long gradeId, Model model) {
         GradeDTO gradeDTO = gradeService.getGradeDTOByGradeId(gradeId);
+        System.out.println(gradeDTO);
         model.addAttribute("gradeDTO", gradeDTO);
         return "grade-form";
     }
