@@ -29,10 +29,18 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((request) -> request
-                .requestMatchers("/teacher/**").hasRole("TEACHER")
-                .requestMatchers("/student/**").hasRole("STUDENT")
-                .anyRequest().authenticated()
-        ).formLogin(Customizer.withDefaults());
+                        .requestMatchers("/teacher/**").hasRole("TEACHER")
+                        .requestMatchers("/student/**").hasRole("STUDENT")
+                        .anyRequest().authenticated()
+                ).formLogin(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // Default logout URL
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/login?logout") // Redirect after logout
+                        .permitAll() // Allows all users to access the logout endpoint
+                );
+        ;
 
         return httpSecurity.build();
     }

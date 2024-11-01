@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1 th:text="'Student '+${studentGradesDTO.student.firstName}+' '+ ${studentGradesDTO.student.lastName}+' grades'"></h1>
+<form action="/logout" method="get">
+    <button type="submit">Logout</button>
+</form>
 <form th:action="@{/student/getStudentGradesBySubject}" method="post" th:object="${studentGradesDTO}">
     <select th:field="*{subjectId}">
         <option th:each="subject : ${studentGradesDTO.subjects}"

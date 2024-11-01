@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>Students grades</h1>
+<form action="/logout" method="get">
+    <button type="submit">Logout</button>
+</form>
 <form th:action="@{/teacher/getStudentsGrades}" method="post" th:object="${studentTeacherDTO}">
     <select th:field="*{subjectId}">
         <option th:each="subject : ${studentTeacherDTO.subjects}"
