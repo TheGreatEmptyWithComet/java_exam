@@ -28,7 +28,7 @@ public class Student {
     private String username;
 
     private String password;
-    private String role = "ROLE_STUDENT";  // Role prefix "ROLE_" required by Spring Security
+    private String role;
 
     @OneToMany(
             cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REMOVE},

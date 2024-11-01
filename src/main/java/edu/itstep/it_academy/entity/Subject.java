@@ -17,6 +17,10 @@ public class Subject {
 
     private String name;
 
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE})
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
 
     // Constructors
     public Subject(String name) {

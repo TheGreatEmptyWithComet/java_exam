@@ -4,8 +4,10 @@ import edu.itstep.it_academy.dto.StudentTeacherDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
+import edu.itstep.it_academy.entity.Teacher;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
+import edu.itstep.it_academy.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +22,17 @@ public class StudentService {
     private SubjectRepository subjectRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private TeacherRepository teacherRepository;
+    @Autowired
+    private TeacherService teacherService;
 
+    // TODO add error handling
     public StudentTeacherDTO getStudentsByDefaultSubject() {
-        Subject defaultSubject = subjectRepository.findAll().get(0);
+        Teacher teacher = teacherService.getCurrentTeacher();
+        Subject defaultSubject = subjectRepository.findByTeacher(teacher).get(0);
         return getStudentsBySubject(defaultSubject);
     }
 
@@ -30,7 +40,6 @@ public class StudentService {
         StudentTeacherDTO studentTeacherDTO = new StudentTeacherDTO();
 
         List<Student> students = studentRepository
-                //.findAllBySubject(subject)
                 .findAll()
                 .stream()
                 .map(student -> {
@@ -46,7 +55,8 @@ public class StudentService {
 
         studentTeacherDTO.setSubjectId(subject.getId());
 
-        List<Subject> subjects = subjectRepository.findAll();
+        Teacher teacher = teacherService.getCurrentTeacher();
+        List<Subject> subjects = subjectRepository.findByTeacher(teacher);
         studentTeacherDTO.setSubjects(subjects);
 
         return studentTeacherDTO;
