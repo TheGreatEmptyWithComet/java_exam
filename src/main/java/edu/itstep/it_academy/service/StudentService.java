@@ -10,8 +10,10 @@ import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
 import edu.itstep.it_academy.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +45,12 @@ public class StudentService {
         StudentTeacherDTO studentTeacherDTO = new StudentTeacherDTO();
 
         List<Student> students = studentRepository
-                .findAll()
+                .findAll(Sort.by("lastName"))
                 .stream()
                 .map(student -> {
                     List<Grade> subjectGrades = student.getGrades().stream()
                             .filter(grade -> grade.getSubject().equals(subject)) // Оставляем только оценки по нужному предмету
+                            .sorted(Comparator.comparing(Grade::getDate).reversed()) // Sort grades by date
                             .collect(Collectors.toList());
                     student.setGrades(subjectGrades);
                     return student;

@@ -3,34 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <title>Student</title>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
 </head>
-<body>
-<h1 th:text="'Student '+${studentGradesDTO.student.firstName}+' '+ ${studentGradesDTO.student.lastName}+' grades'"></h1>
-<form action="/logout" method="get">
-    <button type="submit">Logout</button>
-</form>
-<form th:action="@{/student/getStudentGradesBySubject}" method="post" th:object="${studentGradesDTO}">
-    <select th:field="*{subjectId}">
-        <option th:each="subject : ${studentGradesDTO.subjects}"
-                th:value="${subject.id}"
-                th:text="${subject.name}"></option>
-    </select>
-    <input type="submit" value="Select Subject">
-</form>
+<body class="container">
+<h2>Student's grades</h2>
 
-<span> <input type="button" value="Show all"
-              th:onclick="|window.location.href='/student/'|"/></span>
-
-
-<div th:each="entry : ${studentGradesDTO.grades}">
-    <h3 th:text="${entry.key}"></h3>
-    <ul>
-        <li th:each="grade : ${entry.value}">
-            <span th:text="${grade.date}"></span>
-            <span th:text="${grade.grade}"></span>
-            <span th:text="${grade.comment}"></span>
-        </li>
-    </ul>
+<div class="d-flex justify-content-between mt-3">
+    <h3 th:text="'Student: '+${studentGradesDTO.studentOutDTO.firstName}+' '+ ${studentGradesDTO.studentOutDTO.lastName}"></h3>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout" onclick="return confirm('Are you sure?')" class="btn btn-link">
+    </form>
 </div>
+
+<form th:action="@{/student/getStudentGradesBySubject}" method="post" th:object="${studentGradesDTO}"
+      class="row g-3 my-3">
+    <div class="col-4">
+        <select th:field="*{subjectId}" class="form-control">
+            <option th:each="subject : ${studentGradesDTO.subjects}"
+                    th:value="${subject.id}"
+                    th:text="${subject.name}"></option>
+        </select>
+    </div>
+
+    <div class="col-2">
+        <input type="submit" value="Select Subject" class="btn btn-primary mb-3">
+    </div>
+    <div class="col-2">
+        <a th:href="@{/student/}" class="btn btn-success mb-3">Show all</a>
+    </div>
+</form>
+
+
+<table class="table">
+    <thead>
+    <tr class="table-primary">
+        <th>Date</th>
+        <th>Grade</th>
+        <th colspan="2">Comment</th>
+    </tr>
+    </thead>
+    <tbody th:each="entry : ${studentGradesDTO.grades}">
+    <tr class="table-secondary fw-bolder">
+        <td colspan="4" th:text="${entry.key}"></td>
+    </tr>
+    <span th:each="grade : ${entry.value}">
+        <tr>
+        <td th:text="${grade.date}"></td>
+        <td th:text="${grade.grade}"></td>
+        <td th:text="${grade.comment}" colspan="2"></td>
+        </tr>
+    </span>
+    </tbody>
+</table>
+
+<!--<div th:each="entry : ${studentGradesDTO.grades}">-->
+<!--    <h3 th:text="${entry.key}"></h3>-->
+<!--    <ul>-->
+<!--        <li th:each="grade : ${entry.value}">-->
+<!--            <span th:text="${grade.date}"></span>-->
+<!--            <span th:text="${grade.grade}"></span>-->
+<!--            <span th:text="${grade.comment}"></span>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
 </body>
 </html>

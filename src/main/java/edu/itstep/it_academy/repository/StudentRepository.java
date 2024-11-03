@@ -15,6 +15,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT DISTINCT s FROM Student s JOIN s.grades g WHERE g.subject = :subject")
     public List<Student> findAllBySubject(@Param("subject")Subject subject);
 
-    //public Student findByUsername(String username);
     public Optional<Student> findByUsername(String username);
 }

@@ -6,6 +6,7 @@ import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.mapper.GradeMapper;
+import edu.itstep.it_academy.mapper.StudentMapper;
 import edu.itstep.it_academy.repository.GradeRepository;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
@@ -30,6 +31,8 @@ public class GradeService {
     private GradeRepository gradeRepository;
     @Autowired
     private GradeMapper gradeMapper;
+    @Autowired
+    private StudentMapper studentMapper;
 
 
     public GradeDTO fillGradeDTOWithAdditionalData(GradeDTO gradeDTO) {
@@ -81,7 +84,7 @@ public class GradeService {
 
         String studentUsername = customUserDetailsService.getCurrentUserUsername();
         Student student = studentRepository.findByUsername(studentUsername).get();
-        List<Grade> studentGrades = gradeRepository.findGradesByStudentOrderByDate(student);
+        List<Grade> studentGrades = gradeRepository.findGradesByStudentOrderByDateDesc(student);
         Map<String,List<Grade>> studentGradesGrouped = studentGrades.stream()
                 .collect(Collectors.groupingBy(grade -> grade.getSubject().getName()));
 
@@ -91,7 +94,7 @@ public class GradeService {
         StudentGradesDTO studentGradesDTO = new StudentGradesDTO();
         studentGradesDTO.setGrades(studentGradesGrouped);
         studentGradesDTO.setSubjects(subjects);
-        studentGradesDTO.setStudent(student);
+        studentGradesDTO.setStudentOutDTO(studentMapper.toDTO(student));
 
         return studentGradesDTO;
     }
@@ -102,7 +105,7 @@ public class GradeService {
         Student student = studentRepository.findByUsername(studentUsername).get();
         Subject subject = subjectRepository.findById(subjectId).get();
 
-        List<Grade> studentGrades = gradeRepository.findGradesByStudentAndSubjectOrderByDate(student,subject);
+        List<Grade> studentGrades = gradeRepository.findGradesByStudentAndSubjectOrderByDateDesc(student,subject);
         Map<String,List<Grade>> studentGradesGrouped = studentGrades.stream()
                 .collect(Collectors.groupingBy(grade -> grade.getSubject().getName()));
 
@@ -112,7 +115,7 @@ public class GradeService {
         studentGradesDTO.setGrades(studentGradesGrouped);
         studentGradesDTO.setSubjects(subjects);
         studentGradesDTO.setSubjectId(subjectId);
-        studentGradesDTO.setStudent(student);
+        studentGradesDTO.setStudentOutDTO(studentMapper.toDTO(student));
 
         return studentGradesDTO;
     }

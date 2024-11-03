@@ -17,5 +17,5 @@ public class StudentGradesDTO {
     private long subjectId;
     private Map<String, List<Grade>> grades;
     private List<Subject> subjects;
-    private Student student;
+    private StudentOutDTO studentOutDTO;
 }
