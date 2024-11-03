@@ -1,11 +1,15 @@
 package edu.itstep.it_academy.service;
 
-import edu.itstep.it_academy.dto.StudentTeacherDTO;
+import edu.itstep.it_academy.dto.GradeOutDTO;
+import edu.itstep.it_academy.dto.StudentOutDTO;
+import edu.itstep.it_academy.dto.SubjectOutDTO;
+import edu.itstep.it_academy.dto.TeacherStudentsDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.entity.Teacher;
-import edu.itstep.it_academy.mapper.TeacherMapper;
+import edu.itstep.it_academy.mapper.*;
+import edu.itstep.it_academy.repository.GradeRepository;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
 import edu.itstep.it_academy.repository.TeacherRepository;
@@ -13,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -33,50 +37,123 @@ public class StudentService {
     private TeacherService teacherService;
     @Autowired
     private TeacherMapper teacherMapper;
+    @Autowired
+    private GradeRepository gradeRepository;
+    @Autowired
+    private GradeMapper gradeMapper;
+    @Autowired
+    private StudentMapper studentMapper;
+    @Autowired
+    private SubjectMapper subjectMapper;
 
     // TODO add error handling
-    public StudentTeacherDTO getStudentsByDefaultSubject() {
+    public TeacherStudentsDTO getStudentsGradesByDefaultSubject() {
         Teacher teacher = teacherService.getCurrentTeacher();
         Subject defaultSubject = subjectRepository.findByTeacher(teacher).get(0);
-        return getStudentsBySubject(defaultSubject);
+        return getStudentsGradesBySubject(defaultSubject);
     }
 
-    public StudentTeacherDTO getStudentsBySubject(Subject subject) {
-        StudentTeacherDTO studentTeacherDTO = new StudentTeacherDTO();
+//    public TeacherStudentsDTO getStudentsBySubject(Subject subject) {
+//        TeacherStudentsDTO studentTeacherDTO = new TeacherStudentsDTO();
+//
+//        List<Student> students = studentRepository
+//                .findAll(Sort.by("lastName"))
+//                .stream()
+//                .map(student -> {
+//                    List<Grade> subjectGrades = student.getGrades().stream()
+//                            .filter(grade -> grade.getSubject().equals(subject)) // Оставляем только оценки по нужному предмету
+//                            .sorted(Comparator.comparing(Grade::getDate).reversed()) // Sort grades by date
+//                            .collect(Collectors.toList());
+//                    student.setGrades(subjectGrades);
+//                    return student;
+//                })
+//                .toList();
+//
+//        studentTeacherDTO.setStudents(students);
+//
+//        studentTeacherDTO.setSubjectId(subject.getId());
+//
+//        Teacher teacher = teacherService.getCurrentTeacher();
+//        List<Subject> subjects = subjectRepository.findByTeacher(teacher);
+//        studentTeacherDTO.setSubjects(subjects);
+//
+//        studentTeacherDTO.setTeacherOutDTO(teacherMapper.toDTO(teacher));
+//
+//        return studentTeacherDTO;
+//    }
 
-        List<Student> students = studentRepository
+    public TeacherStudentsDTO getStudentsGradesBySubject(Subject subject) {
+        List<Grade> grades = gradeRepository.findGradesBySubjectOrderByDateDesc(subject);
+        return getTeacherStudentsDTO(grades, subject);
+    }
+
+    public TeacherStudentsDTO getStudentsGradesBySubjectAndDate(Subject subject, LocalDate date) {
+        TeacherStudentsDTO studentTeacherDTO = new TeacherStudentsDTO();
+        List<Grade> grades = gradeRepository.findGradesBySubjectAndDateOrderByDateDesc(subject, date);
+        return getTeacherStudentsDTO(grades, subject);
+    }
+
+    private TeacherStudentsDTO getTeacherStudentsDTO(List<Grade> grades, Subject subject) {
+        TeacherStudentsDTO teacherStudentsDTO = new TeacherStudentsDTO();
+
+        Map<Student, List<Grade>> groupedGrades = grades.stream()
+                .collect(Collectors.groupingBy(Grade::getStudent));
+
+        Map<StudentOutDTO, List<GradeOutDTO>> studentsGrades = groupedGrades
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> studentMapper.toDTO(entry.getKey()),
+                        entry -> entry.getValue().stream()
+                                .map(gradeMapper::toOutDTO)
+                                .collect(Collectors.toList())
+                ));
+
+        List<StudentOutDTO> allStudents = studentRepository
                 .findAll(Sort.by("lastName"))
                 .stream()
-                .map(student -> {
-                    List<Grade> subjectGrades = student.getGrades().stream()
-                            .filter(grade -> grade.getSubject().equals(subject)) // Оставляем только оценки по нужному предмету
-                            .sorted(Comparator.comparing(Grade::getDate).reversed()) // Sort grades by date
-                            .collect(Collectors.toList());
-                    student.setGrades(subjectGrades);
-                    return student;
-                })
+                .map(studentMapper::toDTO)
                 .toList();
 
-        studentTeacherDTO.setStudents(students);
+        allStudents.forEach((student) -> {
+            studentsGrades.putIfAbsent(student, new ArrayList<GradeOutDTO>());
+        });
 
-        studentTeacherDTO.setSubjectId(subject.getId());
+        Map<StudentOutDTO, List<GradeOutDTO>> sortedStudentsGrades = studentsGrades.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey(Comparator.comparing(StudentOutDTO::getLastName))) // Sort by a key property
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, // Keep the key
+                        Map.Entry::getValue, // Keep the value
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new // Preserve insertion order
+                ));
+
+
+        teacherStudentsDTO.setStudents(sortedStudentsGrades);
+
+        teacherStudentsDTO.setSubjectId(subject.getId());
 
         Teacher teacher = teacherService.getCurrentTeacher();
-        List<Subject> subjects = subjectRepository.findByTeacher(teacher);
-        studentTeacherDTO.setSubjects(subjects);
+        List<SubjectOutDTO> subjects = subjectRepository
+                .findByTeacher(teacher)
+                .stream().map(subjectMapper::toDTO)
+                .toList();
 
-        studentTeacherDTO.setTeacherOutDTO(teacherMapper.toDTO(teacher));
+        teacherStudentsDTO.setSubjects(subjects);
 
-        return studentTeacherDTO;
+        teacherStudentsDTO.setTeacherOutDTO(teacherMapper.toDTO(teacher));
+
+        return teacherStudentsDTO;
     }
 
-    public StudentTeacherDTO getStudentsBySubjectId(long id) {
+    public TeacherStudentsDTO getStudentsBySubjectId(long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
         // TODO Change exception
         if (subject == null) {
             throw new RuntimeException("Subject with id " + id + " not fund");
         }
 
-        return getStudentsBySubject(subject);
+        return getStudentsGradesBySubject(subject);
     }
 }

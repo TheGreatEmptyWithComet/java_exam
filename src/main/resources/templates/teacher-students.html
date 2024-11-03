@@ -9,16 +9,16 @@
 <h2>Students grades</h2>
 
 <div class="d-flex justify-content-between mt-3">
-    <h3 th:text="'Teacher: '+${studentTeacherDTO.teacherOutDTO.firstName}+' '+ ${studentTeacherDTO.teacherOutDTO.lastName}"></h3>
+    <h3 th:text="'Teacher: '+${teacherStudentsDTO.teacherOutDTO.firstName}+' '+ ${teacherStudentsDTO.teacherOutDTO.lastName}"></h3>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Logout" onclick="return confirm('Are you sure?')" class="btn btn-link">
     </form>
 </div>
 
-<form th:action="@{/teacher/getStudentsGrades}" method="post" th:object="${studentTeacherDTO}" class="row g-3 my-3">
+<form th:action="@{/teacher/getStudentsGrades}" method="post" th:object="${teacherStudentsDTO}" class="row g-3 my-3">
     <div class="col-4">
         <select th:field="*{subjectId}" class="form-control">
-            <option th:each="subject : ${studentTeacherDTO.subjects}"
+            <option th:each="subject : ${teacherStudentsDTO.subjects}"
                     th:value="${subject.id}"
                     th:text="${subject.name}"></option>
         </select>
@@ -38,18 +38,18 @@
         <th colspan="2" class="text-center">Action</th>
     </tr>
     </thead>
-    <tbody th:each="student : ${studentTeacherDTO.students}">
+    <tbody th:each="entry : ${teacherStudentsDTO.students}">
     <tr class="table-secondary">
-        <td colspan="4" th:text="${student.lastName}+' '+${student.firstName}" class="fw-semibold"></td>
+        <td colspan="4" th:text="${entry.key.lastName}+' '+${entry.key.firstName}" class="fw-semibold"></td>
         <td colspan="2">
             <form th:action=" @{/teacher/createGrade}" method="post" class="text-center">
-                <input type="hidden" name="studentId" th:value="${student.id}"/>
-                <input type="hidden" name="subjectId" th:value="${studentTeacherDTO.subjectId}"/>
+                <input type="hidden" name="studentId" th:value="${entry.key.id}"/>
+                <input type="hidden" name="subjectId" th:value="${teacherStudentsDTO.subjectId}"/>
                 <button type="submit" class="btn btn-secondary">Add grade</button>
             </form>
         </td>
     </tr>
-    <span th:each="grade : ${student.grades}">
+    <span th:each="grade : ${entry.value}">
         <tr>
         <td th:text="${grade.date}"></td>
         <td th:text="${grade.grade}"></td>

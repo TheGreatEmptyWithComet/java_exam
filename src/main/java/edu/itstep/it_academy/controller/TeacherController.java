@@ -1,7 +1,7 @@
 package edu.itstep.it_academy.controller;
 
 import edu.itstep.it_academy.dto.GradeDTO;
-import edu.itstep.it_academy.dto.StudentTeacherDTO;
+import edu.itstep.it_academy.dto.TeacherStudentsDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.service.GradeService;
 import edu.itstep.it_academy.service.StudentService;
@@ -24,22 +24,22 @@ public class TeacherController {
 
     @GetMapping("/")
     public String getStudentsGrades(Model model) {
-        StudentTeacherDTO studentTeacherDTO = studentService.getStudentsByDefaultSubject();
-        model.addAttribute("studentTeacherDTO", studentTeacherDTO);
+        TeacherStudentsDTO teacherStudentsDTO = studentService.getStudentsGradesByDefaultSubject();
+        model.addAttribute("teacherStudentsDTO", teacherStudentsDTO);
         return "teacher-students";
     }
 
     @GetMapping("/getStudentsGrades")
     public String getStudentsGrades(@RequestParam("subjectId") Long subjectId, Model model) {
-        StudentTeacherDTO studentTeacherDTO = studentService.getStudentsBySubjectId(subjectId);
-        model.addAttribute("studentTeacherDTO", studentTeacherDTO);
+        TeacherStudentsDTO teacherStudentsDTO = studentService.getStudentsBySubjectId(subjectId);
+        model.addAttribute("teacherStudentsDTO", teacherStudentsDTO);
         return "teacher-students";
     }
 
     @PostMapping("/getStudentsGrades")
-    public String getStudentsGrades(@ModelAttribute("studentDTO") StudentTeacherDTO studentTeacherDTO, Model model) {
-        studentTeacherDTO = studentService.getStudentsBySubjectId(studentTeacherDTO.getSubjectId());
-        model.addAttribute("studentTeacherDTO", studentTeacherDTO);
+    public String getStudentsGrades(@ModelAttribute("studentDTO") TeacherStudentsDTO teacherStudentsDTO, Model model) {
+        teacherStudentsDTO = studentService.getStudentsBySubjectId(teacherStudentsDTO.getSubjectId());
+        model.addAttribute("teacherStudentsDTO", teacherStudentsDTO);
         return "teacher-students";
     }
 

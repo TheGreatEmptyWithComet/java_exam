@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StudentOutDTO {
+public class SubjectOutDTO {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
 }

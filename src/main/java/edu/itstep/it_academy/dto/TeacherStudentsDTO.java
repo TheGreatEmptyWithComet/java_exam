@@ -7,13 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentTeacherDTO {
+public class TeacherStudentsDTO {
     private long subjectId;
-    private List<Student> students; // TODO add DTO
-    private List<Subject> subjects; // TODO add DTO
+    private Map<StudentOutDTO, List<GradeOutDTO>> students; // TODO add DTO
+    private List<SubjectOutDTO> subjects; // TODO add DTO
     private TeacherOutDTO teacherOutDTO;
 }
