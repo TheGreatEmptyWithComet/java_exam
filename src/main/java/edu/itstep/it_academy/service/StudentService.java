@@ -53,35 +53,6 @@ public class StudentService {
         return getStudentsGradesBySubject(defaultSubject);
     }
 
-//    public TeacherStudentsDTO getStudentsBySubject(Subject subject) {
-//        TeacherStudentsDTO studentTeacherDTO = new TeacherStudentsDTO();
-//
-//        List<Student> students = studentRepository
-//                .findAll(Sort.by("lastName"))
-//                .stream()
-//                .map(student -> {
-//                    List<Grade> subjectGrades = student.getGrades().stream()
-//                            .filter(grade -> grade.getSubject().equals(subject)) // Оставляем только оценки по нужному предмету
-//                            .sorted(Comparator.comparing(Grade::getDate).reversed()) // Sort grades by date
-//                            .collect(Collectors.toList());
-//                    student.setGrades(subjectGrades);
-//                    return student;
-//                })
-//                .toList();
-//
-//        studentTeacherDTO.setStudents(students);
-//
-//        studentTeacherDTO.setSubjectId(subject.getId());
-//
-//        Teacher teacher = teacherService.getCurrentTeacher();
-//        List<Subject> subjects = subjectRepository.findByTeacher(teacher);
-//        studentTeacherDTO.setSubjects(subjects);
-//
-//        studentTeacherDTO.setTeacherOutDTO(teacherMapper.toDTO(teacher));
-//
-//        return studentTeacherDTO;
-//    }
-
     public TeacherStudentsDTO getStudentsGradesBySubject(Subject subject) {
         List<Grade> grades = gradeRepository.findGradesBySubjectOrderByDateDesc(subject);
         return getTeacherStudentsDTO(grades, subject);
@@ -91,6 +62,20 @@ public class StudentService {
         TeacherStudentsDTO studentTeacherDTO = new TeacherStudentsDTO();
         List<Grade> grades = gradeRepository.findGradesBySubjectAndDateOrderByDateDesc(subject, date);
         return getTeacherStudentsDTO(grades, subject);
+    }
+
+    public TeacherStudentsDTO getStudentsGradesBySubjectIdAndDate(long id, LocalDate date) {
+        Subject subject = subjectRepository.findById(id).orElse(null);
+        // TODO Change exception
+        if (subject == null) {
+            throw new RuntimeException("Subject with id " + id + " not fund");
+        }
+
+        if (date == null) {
+            return getStudentsGradesBySubject(subject);
+        } else {
+            return getStudentsGradesBySubjectAndDate(subject, date);
+        }
     }
 
     private TeacherStudentsDTO getTeacherStudentsDTO(List<Grade> grades, Subject subject) {
@@ -145,15 +130,5 @@ public class StudentService {
         teacherStudentsDTO.setTeacherOutDTO(teacherMapper.toDTO(teacher));
 
         return teacherStudentsDTO;
-    }
-
-    public TeacherStudentsDTO getStudentsBySubjectId(long id) {
-        Subject subject = subjectRepository.findById(id).orElse(null);
-        // TODO Change exception
-        if (subject == null) {
-            throw new RuntimeException("Subject with id " + id + " not fund");
-        }
-
-        return getStudentsGradesBySubject(subject);
     }
 }

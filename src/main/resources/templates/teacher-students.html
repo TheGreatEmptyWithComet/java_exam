@@ -16,7 +16,7 @@
 </div>
 
 <form th:action="@{/teacher/getStudentsGrades}" method="post" th:object="${teacherStudentsDTO}" class="row g-3 my-3">
-    <div class="col-4">
+    <div class="col-2">
         <select th:field="*{subjectId}" class="form-control">
             <option th:each="subject : ${teacherStudentsDTO.subjects}"
                     th:value="${subject.id}"
@@ -24,8 +24,13 @@
         </select>
     </div>
 
+    <div class="col-2">
+        <input type="date" id="date" class="form-control" th:field="*{date}"
+        th:value="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}"/>
+    </div>
+
     <div class="col-auto">
-        <input type="submit" value="Select Subject" class="btn btn-primary mb-3">
+        <input type="submit" value="Select" class="btn btn-primary mb-3">
     </div>
 </form>
 

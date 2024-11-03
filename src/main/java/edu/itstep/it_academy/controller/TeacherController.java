@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 
 @Controller
 @RequestMapping("/teacher")
@@ -31,14 +33,14 @@ public class TeacherController {
 
     @GetMapping("/getStudentsGrades")
     public String getStudentsGrades(@RequestParam("subjectId") Long subjectId, Model model) {
-        TeacherStudentsDTO teacherStudentsDTO = studentService.getStudentsBySubjectId(subjectId);
+        TeacherStudentsDTO teacherStudentsDTO = studentService.getStudentsGradesBySubjectIdAndDate(subjectId, null);
         model.addAttribute("teacherStudentsDTO", teacherStudentsDTO);
         return "teacher-students";
     }
 
     @PostMapping("/getStudentsGrades")
-    public String getStudentsGrades(@ModelAttribute("studentDTO") TeacherStudentsDTO teacherStudentsDTO, Model model) {
-        teacherStudentsDTO = studentService.getStudentsBySubjectId(teacherStudentsDTO.getSubjectId());
+    public String getStudentsGrades(@ModelAttribute("teacherStudentsDTO") TeacherStudentsDTO teacherStudentsDTO, Model model) {
+        teacherStudentsDTO = studentService.getStudentsGradesBySubjectIdAndDate(teacherStudentsDTO.getSubjectId(), teacherStudentsDTO.getDate());
         model.addAttribute("teacherStudentsDTO", teacherStudentsDTO);
         return "teacher-students";
     }
@@ -51,8 +53,7 @@ public class TeacherController {
     }
 
     @PostMapping("/saveGrade")
-    public String saveGrade(@Valid @ModelAttribute("gradeDTO") GradeDTO gradeDTO, BindingResult result,Model model) {
-        System.out.println(gradeDTO);
+    public String saveGrade(@Valid @ModelAttribute("gradeDTO") GradeDTO gradeDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
             gradeDTO = gradeService.fillGradeDTOWithAdditionalData(gradeDTO);
             System.out.println(gradeDTO);
