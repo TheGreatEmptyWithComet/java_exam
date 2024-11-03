@@ -36,8 +36,9 @@ public class SecurityConfiguration {
                 .logout(logout -> logout
                         .logoutUrl("/logout") // Default logout URL
                         .invalidateHttpSession(true)
+                        .clearAuthentication(true) //++
                         .deleteCookies("JSESSIONID")
-                        .logoutSuccessUrl("/login?logout") // Redirect after logout
+                        .logoutSuccessUrl("/login") // Redirect after logout
                         .permitAll() // Allows all users to access the logout endpoint
                 );
         ;

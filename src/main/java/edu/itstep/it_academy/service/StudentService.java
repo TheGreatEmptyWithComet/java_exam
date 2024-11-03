@@ -5,6 +5,7 @@ import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.entity.Teacher;
+import edu.itstep.it_academy.mapper.TeacherMapper;
 import edu.itstep.it_academy.repository.StudentRepository;
 import edu.itstep.it_academy.repository.SubjectRepository;
 import edu.itstep.it_academy.repository.TeacherRepository;
@@ -28,6 +29,8 @@ public class StudentService {
     private TeacherRepository teacherRepository;
     @Autowired
     private TeacherService teacherService;
+    @Autowired
+    private TeacherMapper teacherMapper;
 
     // TODO add error handling
     public StudentTeacherDTO getStudentsByDefaultSubject() {
@@ -58,6 +61,8 @@ public class StudentService {
         Teacher teacher = teacherService.getCurrentTeacher();
         List<Subject> subjects = subjectRepository.findByTeacher(teacher);
         studentTeacherDTO.setSubjects(subjects);
+
+        studentTeacherDTO.setTeacherOutDTO(teacherMapper.toDTO(teacher));
 
         return studentTeacherDTO;
     }

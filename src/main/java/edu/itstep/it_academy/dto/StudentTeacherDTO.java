@@ -15,4 +15,5 @@ public class StudentTeacherDTO {
     private long subjectId;
     private List<Student> students; // TODO add DTO
     private List<Subject> subjects; // TODO add DTO
+    private TeacherOutDTO teacherOutDTO;
 }

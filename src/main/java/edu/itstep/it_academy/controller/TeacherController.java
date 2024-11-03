@@ -63,16 +63,16 @@ public class TeacherController {
         return "redirect:/teacher/getStudentsGrades?subjectId=" + gradeDTO.getSubjectId();
     }
 
-    @GetMapping("/updateGrade")
-    public String updateGrade(@RequestParam("gradeId") long gradeId, Model model) {
+    @GetMapping("/updateGrade/{gradeId}")
+    public String updateGrade(@PathVariable("gradeId") long gradeId, Model model) {
         GradeDTO gradeDTO = gradeService.getGradeDTOByGradeId(gradeId);
         System.out.println(gradeDTO);
         model.addAttribute("gradeDTO", gradeDTO);
         return "grade-form";
     }
 
-    @GetMapping("/deleteGrade")
-    public String deleteGrade(@RequestParam("gradeId") long gradeId) {
+    @GetMapping("/deleteGrade/{gradeId}")
+    public String deleteGrade(@PathVariable("gradeId") long gradeId) {
         Grade grade = gradeService.getGradeById(gradeId);
         gradeService.deleteGradeById(gradeId);
         return "redirect:/teacher/getStudentsGrades?subjectId=" + grade.getSubject().getId();
