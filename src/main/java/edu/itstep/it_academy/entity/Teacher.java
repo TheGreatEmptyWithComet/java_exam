@@ -35,10 +35,4 @@ public class Teacher {
 
     private String password;
     private String role;
-
-    // Constructors
-    public Teacher(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 }

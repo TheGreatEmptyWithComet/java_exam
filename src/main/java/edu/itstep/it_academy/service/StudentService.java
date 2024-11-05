@@ -31,10 +31,6 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-    @Autowired
-    private TeacherRepository teacherRepository;
-    @Autowired
     private TeacherService teacherService;
     @Autowired
     private TeacherMapper teacherMapper;
@@ -47,7 +43,6 @@ public class StudentService {
     @Autowired
     private SubjectMapper subjectMapper;
 
-    // TODO add error handling
     public TeacherStudentsDTO getStudentsGradesByDefaultSubject() {
         Teacher teacher = teacherService.getCurrentTeacher();
         var subjects = subjectRepository.findByTeacher(teacher);
@@ -61,7 +56,6 @@ public class StudentService {
     }
 
     public TeacherStudentsDTO getStudentsGradesBySubject(Subject subject) {
-        System.out.println(subject);
         List<Grade> grades = new ArrayList<>();
         if (subject.getId() != null) {
             grades = gradeRepository.findGradesBySubjectOrderByDateDesc(subject);
@@ -120,7 +114,6 @@ public class StudentService {
                         (existing, replacement) -> existing,
                         LinkedHashMap::new // Preserve insertion order
                 ));
-
 
         teacherStudentsDTO.setStudents(sortedStudentsGrades);
 

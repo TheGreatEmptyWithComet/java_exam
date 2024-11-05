@@ -21,17 +21,10 @@ public class Subject {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-
     // Constructors
     public Subject(String name) {
         this.name = name;
     }
-
-
-//    @Override
-//    public String toString() {
-//        return name;
-//    }
 
     @Override
     public String toString() {
