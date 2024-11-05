@@ -28,8 +28,16 @@ public class Subject {
     }
 
 
+//    @Override
+//    public String toString() {
+//        return name;
+//    }
+
     @Override
     public String toString() {
-        return name;
+        return "Subject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

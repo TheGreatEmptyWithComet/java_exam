@@ -22,17 +22,11 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
     @Autowired
     private TeacherRepository teacherRepository;
 
     @Autowired
     private StudentRepository studentRepository;
-
-//    public CustomUserDetailsService() {
-//        this.authentication = authentication;
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

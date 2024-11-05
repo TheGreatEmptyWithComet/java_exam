@@ -8,6 +8,7 @@ import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import edu.itstep.it_academy.entity.Teacher;
+import edu.itstep.it_academy.exception.SubjectNotFoundException;
 import edu.itstep.it_academy.mapper.*;
 import edu.itstep.it_academy.repository.GradeRepository;
 import edu.itstep.it_academy.repository.StudentRepository;
@@ -49,12 +50,22 @@ public class StudentService {
     // TODO add error handling
     public TeacherStudentsDTO getStudentsGradesByDefaultSubject() {
         Teacher teacher = teacherService.getCurrentTeacher();
-        Subject defaultSubject = subjectRepository.findByTeacher(teacher).get(0);
+        var subjects = subjectRepository.findByTeacher(teacher);
+        Subject defaultSubject;
+        if (!subjects.isEmpty()) {
+            defaultSubject = subjects.get(0);
+        } else {
+            defaultSubject = new Subject();
+        }
         return getStudentsGradesBySubject(defaultSubject);
     }
 
     public TeacherStudentsDTO getStudentsGradesBySubject(Subject subject) {
-        List<Grade> grades = gradeRepository.findGradesBySubjectOrderByDateDesc(subject);
+        System.out.println(subject);
+        List<Grade> grades = new ArrayList<>();
+        if (subject.getId() != null) {
+            grades = gradeRepository.findGradesBySubjectOrderByDateDesc(subject);
+        }
         return getTeacherStudentsDTO(grades, subject);
     }
 
@@ -64,12 +75,8 @@ public class StudentService {
         return getTeacherStudentsDTO(grades, subject);
     }
 
-    public TeacherStudentsDTO getStudentsGradesBySubjectIdAndDate(long id, LocalDate date) {
-        Subject subject = subjectRepository.findById(id).orElse(null);
-        // TODO Change exception
-        if (subject == null) {
-            throw new RuntimeException("Subject with id " + id + " not fund");
-        }
+    public TeacherStudentsDTO getStudentsGradesBySubjectIdAndDate(Long id, LocalDate date) {
+        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new SubjectNotFoundException(id));
 
         if (date == null) {
             return getStudentsGradesBySubject(subject);

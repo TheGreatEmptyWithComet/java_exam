@@ -5,6 +5,9 @@ import edu.itstep.it_academy.dto.StudentGradesDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
+import edu.itstep.it_academy.exception.GradeNotFoundException;
+import edu.itstep.it_academy.exception.SubjectNotFoundException;
+import edu.itstep.it_academy.exception.UserNotFoundException;
 import edu.itstep.it_academy.mapper.GradeMapper;
 import edu.itstep.it_academy.mapper.StudentMapper;
 import edu.itstep.it_academy.repository.GradeRepository;
@@ -48,7 +51,7 @@ public class GradeService {
 
         if (gradeFromForm.getId() == null) {
             gradeRepository.save(gradeFromForm);
-        }else{
+        } else {
             Grade gradeFromDB = gradeRepository.findById(gradeFromForm.getId()).get();
             gradeFromDB.setSubject(gradeFromForm.getSubject());
             gradeFromDB.setStudent(gradeFromForm.getStudent());
@@ -60,7 +63,7 @@ public class GradeService {
     }
 
     public Grade getGradeById(long id) {
-        return gradeRepository.findById(id).orElseThrow(() -> new RuntimeException("No grade with id " + id + " found"));
+        return gradeRepository.findById(id).orElseThrow(() -> new GradeNotFoundException(id));
     }
 
     public GradeDTO getGradeDTOByGradeId(long id) {
@@ -73,22 +76,23 @@ public class GradeService {
     }
 
     @Transactional
-    public void deleteGradeById(long id){
+    public void deleteGradeById(long id) {
         Grade grade = getGradeById(id);
         grade.getStudent().getGrades().remove(grade);
         gradeRepository.deleteById(id);
         System.out.println("Service delete");
     }
 
-    public StudentGradesDTO getCurrentStudentGrades(){
+    public StudentGradesDTO getCurrentStudentGrades() {
 
         String studentUsername = customUserDetailsService.getCurrentUserUsername();
-        Student student = studentRepository.findByUsername(studentUsername).get();
+        Student student = studentRepository
+                .findByUsername(studentUsername)
+                .orElseThrow(() -> new UserNotFoundException(studentUsername));
         List<Grade> studentGrades = gradeRepository.findGradesByStudentOrderByDateDesc(student);
-        Map<String,List<Grade>> studentGradesGrouped = studentGrades.stream()
+        Map<String, List<Grade>> studentGradesGrouped = studentGrades.stream()
                 .collect(Collectors.groupingBy(grade -> grade.getSubject().getName()));
 
-        //List<Subject> subjects = subjectService.getDistinctSubjectsFromGrades(studentGrades);
         List<Subject> subjects = subjectRepository.findAll();
 
         StudentGradesDTO studentGradesDTO = new StudentGradesDTO();
@@ -99,14 +103,18 @@ public class GradeService {
         return studentGradesDTO;
     }
 
-    public StudentGradesDTO getCurrentStudentGradesBySubjectId(long subjectId){
+    public StudentGradesDTO getCurrentStudentGradesBySubjectId(long subjectId) {
 
         String studentUsername = customUserDetailsService.getCurrentUserUsername();
-        Student student = studentRepository.findByUsername(studentUsername).get();
-        Subject subject = subjectRepository.findById(subjectId).get();
+        Student student = studentRepository
+                .findByUsername(studentUsername)
+                .orElseThrow(() -> new UserNotFoundException(studentUsername));;
+        Subject subject = subjectRepository
+                .findById(subjectId)
+                .orElseThrow(() -> new SubjectNotFoundException(subjectId));
 
-        List<Grade> studentGrades = gradeRepository.findGradesByStudentAndSubjectOrderByDateDesc(student,subject);
-        Map<String,List<Grade>> studentGradesGrouped = studentGrades.stream()
+        List<Grade> studentGrades = gradeRepository.findGradesByStudentAndSubjectOrderByDateDesc(student, subject);
+        Map<String, List<Grade>> studentGradesGrouped = studentGrades.stream()
                 .collect(Collectors.groupingBy(grade -> grade.getSubject().getName()));
 
         List<Subject> subjects = subjectRepository.findAll();

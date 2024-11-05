@@ -1,7 +1,6 @@
 package edu.itstep.it_academy.dto;
 
 import edu.itstep.it_academy.entity.Grade;
-import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentGradesDTO {
-    private long subjectId;
+    private Long subjectId;
     private Map<String, List<Grade>> grades;
     private List<Subject> subjects;
     private StudentOutDTO studentOutDTO;

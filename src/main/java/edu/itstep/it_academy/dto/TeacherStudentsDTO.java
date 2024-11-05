@@ -1,7 +1,5 @@
 package edu.itstep.it_academy.dto;
 
-import edu.itstep.it_academy.entity.Student;
-import edu.itstep.it_academy.entity.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,10 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeacherStudentsDTO {
-    private long subjectId;
+    private Long subjectId;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
-    private Map<StudentOutDTO, List<GradeOutDTO>> students; // TODO add DTO
-    private List<SubjectOutDTO> subjects; // TODO add DTO
+    private Map<StudentOutDTO, List<GradeOutDTO>> students;
+    private List<SubjectOutDTO> subjects;
     private TeacherOutDTO teacherOutDTO;
 }

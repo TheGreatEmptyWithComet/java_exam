@@ -18,8 +18,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GradeDTO {
-    private long subjectId;
-    private long studentId;
+    private Long subjectId;
+    private Long studentId;
     private List<Student> students;
     private List<Subject> subjects;
 
