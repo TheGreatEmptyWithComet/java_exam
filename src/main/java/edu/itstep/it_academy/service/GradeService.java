@@ -5,6 +5,7 @@ import edu.itstep.it_academy.dto.StudentGradesDTO;
 import edu.itstep.it_academy.entity.Grade;
 import edu.itstep.it_academy.entity.Student;
 import edu.itstep.it_academy.entity.Subject;
+import edu.itstep.it_academy.entity.Teacher;
 import edu.itstep.it_academy.exception.GradeNotFoundException;
 import edu.itstep.it_academy.exception.SubjectNotFoundException;
 import edu.itstep.it_academy.exception.UserNotFoundException;
@@ -36,11 +37,15 @@ public class GradeService {
     private GradeMapper gradeMapper;
     @Autowired
     private StudentMapper studentMapper;
+    @Autowired
+    private TeacherService teacherService;
 
 
     public GradeDTO fillGradeDTOWithAdditionalData(GradeDTO gradeDTO) {
         gradeDTO.setStudents(studentRepository.findAll());
-        gradeDTO.setSubjects(subjectRepository.findAll());
+        Teacher teacher =  teacherService.getCurrentTeacher();
+        var subjects = subjectRepository.findByTeacher(teacher);
+        gradeDTO.setSubjects(subjectRepository.findByTeacher(teacher));
         return gradeDTO;
     }
 
@@ -52,7 +57,7 @@ public class GradeService {
         if (gradeFromForm.getId() == null) {
             gradeRepository.save(gradeFromForm);
         } else {
-            Grade gradeFromDB = gradeRepository.findById(gradeFromForm.getId()).get();
+            Grade gradeFromDB = gradeRepository.findById(gradeFromForm.getId()).orElseThrow(() -> new GradeNotFoundException(gradeFromForm.getId()));
             gradeFromDB.setSubject(gradeFromForm.getSubject());
             gradeFromDB.setStudent(gradeFromForm.getStudent());
             gradeFromDB.setComment(gradeFromForm.getComment());
@@ -80,7 +85,6 @@ public class GradeService {
         Grade grade = getGradeById(id);
         grade.getStudent().getGrades().remove(grade);
         gradeRepository.deleteById(id);
-        System.out.println("Service delete");
     }
 
     public StudentGradesDTO getCurrentStudentGrades() {
